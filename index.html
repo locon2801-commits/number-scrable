@@ -1,78 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Number Soup Word Search</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(10, 40px);
-            gap: 5px;
-            margin: auto;
-        }
-        .cell {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #000;
-            font-size: 24px;
-        }
-        .highlight {
-            background-color: yellow;
-        }
+        body { font-family: Arial, sans-serif; background: linear-gradient(45deg, #f3ec78, #af4261); }
+        h1 { text-align: center; }
+        .grid { display: grid; margin: auto; }
+        .cell { width: 30px; height: 30px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; }
+        .cell:hover { background-color: rgba(255, 255, 0, 0.5); cursor: pointer; }
+        .selected { background-color: rgba(0, 255, 0, 0.5); }
     </style>
 </head>
 <body>
     <h1>Number Soup Word Search</h1>
-    <div class="grid">
-        <!-- The grid will be dynamically generated here -->
-    </div>
+    <div id="game"></div>
     <script>
-        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        const gridSize = 10;
+        const words = ["example", "word", "search", "soup", "difficult", "challenge", "game", "exciting", "fun", "play"];
+        const difficulties = { easy: 10, medium: 12, hard: 14 };
         let grid = [];
+        let selectedCells = [];
 
-        function createGrid() {
-            for (let i = 0; i < gridSize; i++) {
-                grid[i] = [];
-                for (let j = 0; j < gridSize; j++) {
-                    grid[i][j] = numbers[Math.floor(Math.random() * numbers.length)];
+        function createGrid(size) {
+            grid = Array.from({ length: size }, () => Array(size).fill(0));
+            fillWords(size);
+    
+            // Fill remaining empty spots with random numbers
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    if (grid[row][col] === 0) {
+                        grid[row][col] = Math.floor(Math.random() * 10);
+                    }
                 }
             }
         }
 
-        function renderGrid() {
-            const gridContainer = document.querySelector('.grid');
-            grid.forEach(row => {
-                row.forEach(cell => {
-                    const cellElement = document.createElement('div');
-                    cellElement.className = 'cell';
-                    cellElement.textContent = cell;
-                    gridContainer.appendChild(cellElement);
-                });
-            });
-        }
-
-        function highlightNumber(number) {
-            const cells = document.querySelectorAll('.cell');
-            cells.forEach(cell => {
-                if (cell.textContent == number) {
-                    cell.classList.toggle('highlight');
+        function fillWords(size) {
+            // Simplified word placement logic (should include random orientation and directional placement)
+            words.forEach(word => {
+                let placed = false;
+                while (!placed) {
+                    const row = Math.floor(Math.random() * size);
+                    const col = Math.floor(Math.random() * size);
+                    if (canPlaceWord(word, row, col)) {
+                        placeWord(word, row, col);
+                        placed = true;
+                    }
                 }
             });
         }
 
-        createGrid();
-        renderGrid();
+        function canPlaceWord(word, row, col) {
+            // Placeholder for actual logic to check if word can be placed
+            return true;
+        }
 
-        // For demonstration, highlight number 5 after 2 seconds
-        setTimeout(() => highlightNumber(5), 2000);
+        function placeWord(word, row, col) {
+            // Placeholder for actual logic to place the word
+        }
+
+        function drawGrid() {
+            const gridDiv = document.getElementById('game');
+            gridDiv.innerHTML = '';
+            const size = grid.length;
+            grid.forEach((row, i) => {
+                row.forEach((cell, j) => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'cell';
+                    cellDiv.innerHTML = cell;
+                    cellDiv.dataset.row = i;
+                    cellDiv.dataset.col = j;
+                    cellDiv.onclick = () => selectCell(i, j);
+                    gridDiv.appendChild(cellDiv);
+                });
+            });
+            gridDiv.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        }
+
+        function selectCell(row, col) {
+            const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+            cell.classList.toggle('selected');
+            // Add logic for word matching and progress tracking
+        }
+
+        function startGame(difficulty) {
+            const size = difficulties[difficulty];
+            createGrid(size);
+            drawGrid();
+        }
+
+        // Start the game with Easy difficulty
+        startGame('easy');
     </script>
 </body>
 </html>
