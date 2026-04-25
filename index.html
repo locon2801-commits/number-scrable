@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Soup Word Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            gap: 5px;
+            margin: auto;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #000;
+            font-size: 24px;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Number Soup Word Search</h1>
+    <div class="grid">
+        <!-- The grid will be dynamically generated here -->
+    </div>
+    <script>
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const gridSize = 10;
+        let grid = [];
+
+        function createGrid() {
+            for (let i = 0; i < gridSize; i++) {
+                grid[i] = [];
+                for (let j = 0; j < gridSize; j++) {
+                    grid[i][j] = numbers[Math.floor(Math.random() * numbers.length)];
+                }
+            }
+        }
+
+        function renderGrid() {
+            const gridContainer = document.querySelector('.grid');
+            grid.forEach(row => {
+                row.forEach(cell => {
+                    const cellElement = document.createElement('div');
+                    cellElement.className = 'cell';
+                    cellElement.textContent = cell;
+                    gridContainer.appendChild(cellElement);
+                });
+            });
+        }
+
+        function highlightNumber(number) {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                if (cell.textContent == number) {
+                    cell.classList.toggle('highlight');
+                }
+            });
+        }
+
+        createGrid();
+        renderGrid();
+
+        // For demonstration, highlight number 5 after 2 seconds
+        setTimeout(() => highlightNumber(5), 2000);
+    </script>
+</body>
+</html>
